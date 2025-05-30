@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        h1 { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Create account</a></li>
+        </ul>
+    </nav>
+    <h1>Login to your account</h1>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form action="/login" method="post">
+        <label for="student_id">Student ID (s-ka):
+            <input type="number" name="student_id" required />
+        </label>
+        <label for="password">Password:
+            <input type="password" name="password" required />
+        </label>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

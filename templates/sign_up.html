@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        h1 { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Create account</a></li>
+    </ul>
+</nav>
+<h1>Create an account</h1>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<form action="/register" method="post">
+    <label for="student_id">Student ID (s-ka):
+        <input type="number" name="student_id" required />
+    </label>
+
+    <label for="name">Name:
+        <input type="text" name="name" required />
+    </label>
+
+    <label for="surname">Surname:
+        <input type="text" name="surname" required />
+    </label>
+    <label for="role">Role:
+        <select name="role" required>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+        </select>
+    </label>
+    <label for="password">Password:
+        <input type="password" name="password" required />
+    </label>
+    <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>

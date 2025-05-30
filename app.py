@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from database import db
 
 from model.user import init_default_users, User, UserRole
-from model.task import init_default_tasks, Task
+from model.task import init_default_tasks
 from model.solution import init_default_solutions, Solution
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -39,19 +39,20 @@ def create_app(isDebug: bool):
 
     return app
 
+
 app = create_app(True)
+
 
 @login_manager.user_loader
 def load_user(student_id):
     return User.query.get(int(student_id))
 
+
 # ROUTING
 @app.route('/')
+@login_required
 def index():
-    for s in db.session.query(Solution).all():
-        print(s)
-
-    return 'Hello World!'
+    return redirect(url_for("dashboard"))
 
 
 # Register route
@@ -62,7 +63,7 @@ def register():
         name = request.form.get("name")
         surname = request.form.get("surname")
         role = request.form.get("role")
-        password = request.form.get("password") # Should store only hashed passwords but its poc
+        password = request.form.get("password")  # Should store only hashed passwords but its poc
 
         if User.query.filter_by(student_id=student_id).first():
             return render_template("sign_up.html", error="Account with that student id already exists")
@@ -82,7 +83,7 @@ def register():
 
         # hashed_password = generate_password_hash(password, method="pbkdf2:sha256") # DELETEME
 
-        new_user = User(student_id = student_id,name=name, surname=surname, password=password, role=role)
+        new_user = User(student_id=student_id, name=name, surname=surname, password=password, role=role)
         db.session.add(new_user)
         db.session.commit()
 
@@ -114,12 +115,14 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    return redirect(url_for("index"))
+
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
     return render_template("dashboard.html", user=current_user)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

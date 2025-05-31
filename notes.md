@@ -1,0 +1,43 @@
+# POC
+## Models
+### User
+fields:
+- `student_id` (*PK*)
+- `name`]
+- `surname`
+- `password` - preferably hashed
+- `role` - Either Student (User) or Teacher(Task manager)
+- `groups` - **TODO** groups the user is in
+- `assigned tasks` - accessible thru groups hes in
+information from users level:
+- [ ] group's he's assigned to 
+    - [ ] tasks he's assigned to
+- [ ] owned tasks
+### Task
+fields:
+- `id` (*PK*)
+- `title`
+- `content` (body of the task - in markdown)
+- `owner`
+- `groups` that this task is assigned to
+- `solutions` sent by users from the groups that the task got assigned to
+- `state` of the task (unpublished, open, closed)
+    - unpublished - task hasn't been published to the groups yet
+    - open - assigned users can upload their solutions
+    - closed - assigned users can't upload their solutions anymore, but can view their results from each deadline
+additional notes:
+- one user may send multiple solutions to one task
+- *tasks have defined deadlines (once the deadline is due, the tasks are checking all of the recived solutions)*
+- *task has to have definded tests and score for the test -> (list of strings as code or smting)*
+- convert `state` into association table (`TaskDeadline`, or Milestone, name is wip) cuz:
+    - each group might have diffrent deadlines
+    - for each group we'd like to track the current state of that task 
+    (to know wheter to even display that tasks for the users in group)
+    - only the latest uploaded solution should be kept on the server, and the latest
+### Solution
+fields:
+- `id` (PK)
+- `task` target task for which this solution is for
+- `owner` of the solution
+- `script` solution code
+- `date` when the solution got uploaded

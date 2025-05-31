@@ -15,7 +15,7 @@ class UserRole(enum.Enum):
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
-    student_id = db.Column(db.String, unique=True, nullable=True) # Change to false
+    student_id = db.Column(db.String, unique=True, nullable=True) # Change to false, CONSIDER: setting to primary_key
     name = db.Column(db.String, unique=False, nullable=False)
     surname = db.Column(db.String, unique=False, nullable=False)
     password = db.Column(db.String, unique=False, nullable=False)

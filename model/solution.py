@@ -23,7 +23,7 @@ def init_default_solutions():
     try:
         db.session.add_all([soltion_user, soltion_adam])
         db.session.commit()
-    except:
+    except Exception:  # TODO: Check if the same as empty except:
         db.session.rollback()
         raise
     finally:

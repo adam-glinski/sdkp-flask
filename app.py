@@ -6,7 +6,7 @@ from database import db
 
 from model.user import init_default_users, User, UserRole
 from model.task import init_default_tasks
-from model.solution import init_default_solutions, Solution
+from model.solution import init_default_solutions
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

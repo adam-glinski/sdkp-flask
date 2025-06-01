@@ -1,4 +1,35 @@
 # POC
+## Project structure
+```text
+sdkp-flask/
+├── app/
+│   ├── __init__.py              # Create Flask app and init extensions
+│   ├── models/                  # SQLAlchemy models
+│   │   ├── user.py              # User model
+│   │   ├── task.py              # Task model
+│   │   └── solution.py          # Solution model
+│   ├── services/                # Business logic layer
+│   │   ├── solution_service.py  # Validate, store, log solutions
+│   │   ├── task_service.py      # Manage task deadlines, checks
+│   │   └── user_service.py      # Register, login, manage users
+│   ├── routes/                  # Flask route blueprints
+│   │   ├── auth.py              # /login, /register, etc.
+│   │   ├── task.py              # /tasks, /submit, etc.
+│   │   └── main.py              # /dashboard, /
+│   ├── validators/              # Input validation logic
+│   │   └── solution_validator.py
+│   ├── scheduler/               # Periodic checking logic
+│   │   └── task_checker.py      # Run validation jobs
+│   ├── static/                  # CSS/JS
+│   ├── templates/               # Jinja2 templates
+│   └── extensions.py            # db, login_manager, etc.
+├── data/                        # Uploaded files, local DB
+├── config.py                    # Flask config
+├── app.py                       # Entrypoint with `create_app()`
+├── requirements.txt
+└── README.md
+```
+
 ## Models
 ### User
 fields:

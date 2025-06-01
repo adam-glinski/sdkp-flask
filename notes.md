@@ -34,8 +34,8 @@ sdkp-flask/
 ### User
 fields:
 - `student_id` (*PK*)
-- `name`
-- `surname`
+- ~~`name`~~
+- ~~`surname`~~
 - `password` - preferably hashed
 - `role` - Either Student (User) or Teacher(Task manager)
 - `groups` - **TODO** groups the user is in

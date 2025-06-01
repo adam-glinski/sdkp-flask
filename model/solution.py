@@ -18,8 +18,8 @@ class Solution(db.Model):
 
 
 def init_default_solutions():
-    soltion_user = Solution(task_id=1, owner_id=3, script="User's solution to task 1.")
-    soltion_adam = Solution(task_id=1, owner_id=4, script="Adam's solution to task 1.")
+    soltion_user = Solution(task_id=1, owner_id="s00003", script="User's solution to task 1.")
+    soltion_adam = Solution(task_id=1, owner_id="s00004", script="Adam's solution to task 1.")
     try:
         db.session.add_all([soltion_user, soltion_adam])
         db.session.commit()

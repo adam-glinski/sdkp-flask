@@ -21,6 +21,7 @@ fields:
 - `owner`
 - `groups` that this task is assigned to
 - `solutions` sent by users from the groups that the task got assigned to
+- `deadlines` - list of DateTime (number of elements = number of deadlines, last element = last deadline)
 - `state` of the task (unpublished, open, closed)
     - unpublished - task hasn't been published to the groups yet
     - open - assigned users can upload their solutions

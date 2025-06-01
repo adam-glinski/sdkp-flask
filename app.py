@@ -17,11 +17,9 @@ def populate_default_db():
     init_default_solutions()
 
 
-login_manager = LoginManager()
-
-
 def create_app(isDebug: bool):
     app = Flask(__name__)
+    login_manager = LoginManager()
 
     db_path = os.path.join(basedir, "data", "sdkp.db")
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
@@ -37,10 +35,10 @@ def create_app(isDebug: bool):
     login_manager.init_app(app)
     login_manager.login_view = "login"
 
-    return app
+    return app, login_manager
 
 
-app = create_app(True)
+app, login_manager = create_app(True)
 
 
 @login_manager.user_loader

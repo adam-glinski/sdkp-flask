@@ -3,7 +3,7 @@
 ### User
 fields:
 - `student_id` (*PK*)
-- `name`]
+- `name`
 - `surname`
 - `password` - preferably hashed
 - `role` - Either Student (User) or Teacher(Task manager)
@@ -42,3 +42,4 @@ fields:
 - `owner` of the solution
 - `script` solution code
 - `date` when the solution got uploaded
+

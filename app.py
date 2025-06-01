@@ -43,7 +43,7 @@ app, login_manager = create_app(True)
 
 @login_manager.user_loader
 def load_user(student_id):
-    return User.query.get(int(student_id))
+    return User.query.get(student_id)
 
 
 # ROUTING

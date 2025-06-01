@@ -8,7 +8,7 @@ class Solution(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey("task.id"), nullable=False)
     task = db.relationship("Task", back_populates="solutions", uselist=False)
     # Owner of the solution
-    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    owner_id = db.Column(db.String, db.ForeignKey("user.student_id"), nullable=False)
     owner = db.relationship("User", back_populates="ownedSolutions")
     # Content of the solution
     script = db.Column(db.String, nullable=False, unique=False)

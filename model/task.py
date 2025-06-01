@@ -6,7 +6,7 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     # Task manager stuff
-    manager_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    manager_id = db.Column(db.String, db.ForeignKey("user.student_id"), nullable=False)
     manager = db.relationship("User", back_populates="ownedTasks")
     # Solutions
     solutions = db.relationship("Solution", back_populates="task")

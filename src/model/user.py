@@ -13,7 +13,7 @@ class UserRole(enum.Enum):
 
 class User(UserMixin, db.Model):
     __tablename__ = "user"
-    student_id = db.Column(db.String, primary_key=True, nullable=False)
+    student_id = db.Column(db.String, primary_key=True, unique=True, nullable=False)
     # name = db.Column(db.String, unique=False, nullable=False)
     # surname = db.Column(db.String, unique=False, nullable=False)
     password = db.Column(db.String, unique=False, nullable=False)
@@ -35,6 +35,7 @@ def init_default_users():
     # user = User(student_id="s00003", name="User", surname="User", password="user", role=UserRole.USER)
     #
     # adam = User(student_id="s30593", name="Adam", surname="Glinski", password="test", role=UserRole.USER)
+    print("Adding deafault users to the db.")
 
     admin = User(student_id="s00001", password="toor", role=UserRole.ADMIN)
     taskmanager = User(student_id="s00002", password="task", role=UserRole.TASK_MANAGER)
@@ -44,7 +45,7 @@ def init_default_users():
     try:
         db.session.add_all([admin, taskmanager, user, adam])
         db.session.commit()
-    except:
+    except Exception:
         db.session.rollback()
         raise
     finally:

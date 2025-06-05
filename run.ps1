@@ -1,4 +1,4 @@
-$env:FLASK_APP = "app.py"
+$env:FLASK_APP = "src/app.py"
 $env:FLASK_ENV = "development"
 $env:FLASK_DEBUG = "1"
 
@@ -16,9 +16,9 @@ if ($args -contains "--clean-db" -or $args -contains "-c") {
 # Check for --backend or -b
 if ($args -contains "--backend" -or $args -contains "-b") {
     # Write-Host " * Running just backend code."
-    & .\.venv\Scripts\python.exe "backend\tester.py"
-    exit
+    & .\.venv\Scripts\python.exe "src\backend\tester.py"
+} else {
+# Run the Flask app
+    & .\.venv\Scripts\python.exe -m flask run
 }
 
-# Run the Flask app
-& .\.venv\Scripts\python.exe -m flask run

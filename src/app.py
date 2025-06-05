@@ -17,11 +17,11 @@ def populate_default_db():
     init_default_solutions()
 
 
-def create_app(isDebug: bool):
+def create_app(isDebug: bool) -> tuple[Flask, LoginManager]:
     app = Flask(__name__)
     login_manager = LoginManager()
 
-    db_path = os.path.join(basedir, "data", "sdkp.db")
+    db_path = os.path.join(basedir, "..", "data", "sdkp.db")
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
     app.config["SECRET_KEY"] = "PPY_32"
     db.init_app(app)
@@ -34,19 +34,17 @@ def create_app(isDebug: bool):
 
     login_manager.init_app(app)
     login_manager.login_view = "login"
-
     return app, login_manager
 
 
-app, login_manager = create_app(True)
+app, login_manager = create_app(False)
 
 
 @login_manager.user_loader
-def load_user(student_id):
+def load_user(student_id: int) -> (User | None):
     return User.query.get(student_id)
 
 
-# ROUTING
 @app.route('/')
 @login_required
 def index():

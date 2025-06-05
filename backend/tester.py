@@ -2,7 +2,7 @@ import subprocess
 import difflib
 
 
-def get_diff(expected, actual):
+def get_diff(expected: str, actual: str) -> str:
     expected_lines = expected.strip().splitlines()
     actual_lines = actual.strip().splitlines()
 
@@ -13,6 +13,8 @@ def get_diff(expected, actual):
             tofile='actual',
             lineterm=''
     )
+    for line in diff:
+        print(line)
     diff_str = "".join(diff)
 
     return diff_str
@@ -33,13 +35,12 @@ def test_code(script: str, input: str, expected_output: str) -> bool:
 
     output = output.stdout.strip()
     expected_output = expected_output
-    print(f"{output=}")
-    print(f"{expected_output=}")
 
     if output == expected_output:
         return True
 
-    print(get_diff(expected_output, output))
+    # print(get_diff(expected_output, output))
+    get_diff(expected_output, output)
     return False
 
 

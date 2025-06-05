@@ -11,4 +11,9 @@ if [[ \ $*\  == *\ --clean-db\ * ]] || [[ \ $*\  == *\ -c\ * ]]; then
     rm -rf ./data/sdkp.db
 fi
 
+if [[ \ $*\  == *\ --backend\ * ]] || [[ \ $*\  == *\ -b\ * ]]; then
+    echo " * Running just backend code."
+    ./.venv/bin/python ./backend/tester.py
+fi
+
 ./.venv/bin/python -m flask run

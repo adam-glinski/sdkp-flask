@@ -23,9 +23,9 @@ def get_diff(expected: str, actual: str) -> str:
 def test_code(script: str, input: str, expected_output: str) -> bool:
     """
     Function that tests `script` by passing in `input` as stdin, and checking the output against the `output` arg.
+
     returns:
-        - `True` if the test passed
-        - `False` if the test failed
+        bool: True if the expected_output matches the actual output.
     """
     output = subprocess.run(
             ["python3", "-c", script],

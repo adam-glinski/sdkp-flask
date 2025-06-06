@@ -1,10 +1,9 @@
 #!/bin/sh
-FLASK_APP=app.py
+FLASK_APP="src/app.py"
 FLASK_ENV=development
 FLASK_DEBUG=1
 
-# Create the directory
-mkdir data
+mkdir -p data
 
 if [[ \ $*\  == *\ --clean-db\ * ]] || [[ \ $*\  == *\ -c\ * ]]; then
     echo " * Cleaning the database file."
@@ -12,8 +11,8 @@ if [[ \ $*\  == *\ --clean-db\ * ]] || [[ \ $*\  == *\ -c\ * ]]; then
 fi
 
 if [[ \ $*\  == *\ --backend\ * ]] || [[ \ $*\  == *\ -b\ * ]]; then
-    echo " * Running just backend code."
-    ./.venv/bin/python ./backend/tester.py
+    ./.venv/bin/python src/backend/tester.py
+else
+    ./.venv/bin/python -m flask run
 fi
 
-./.venv/bin/python -m flask run

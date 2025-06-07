@@ -13,6 +13,6 @@ fi
 if [[ \ $*\  == *\ --backend\ * ]] || [[ \ $*\  == *\ -b\ * ]]; then
     ./.venv/bin/python src/backend/tester.py
 else
-    ./.venv/bin/python -m flask run
+    flask --app "src/app.py" run 
 fi
 

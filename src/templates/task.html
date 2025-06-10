@@ -5,6 +5,11 @@
     <title>{{ task.name }}</title>
 </head>
 <body>
-    <h1> {{ task }} </h1>
+    <h1> {{ task.name }} </h1>
+    <p> {{ task.content }} </p>
+    <form>
+        <textarea id="solution" placeholder="Your solution"> </textarea>
+        <input type="submit"> Submit solution </input>
+    </form>
 </body>
 </html>

@@ -4,12 +4,13 @@ from database import db
 class Solution(db.Model):
     __tablename__ = "solution"
     id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
+    date = db.Column(db.Date)
     # Target task
     task_id = db.Column(db.Integer, db.ForeignKey("task.id"), nullable=False)
     task = db.relationship("Task", back_populates="solutions", uselist=False)
     # Owner of the solution
     owner_id = db.Column(db.String, db.ForeignKey("user.student_id"), nullable=False)
-    owner = db.relationship("User", back_populates="ownedSolutions")
+    owner = db.relationship("User", back_populates="owned_solutions")
     # Content of the solution
     script = db.Column(db.String, nullable=False, unique=False)
 

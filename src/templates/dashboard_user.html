@@ -12,5 +12,11 @@
 </nav>
 <h1> User dashboard </h1>
 <h1>Welcome back, {{ user.student_id }}</h1>
+<h2> Assiged tasks: </h2>
+<ul>
+    {% for task in user.assigned_tasks %}
+    <li> <a href="/task/{{ task.id }}"> {{ task.title }} </a> </li>
+    {% endfor %}
+</ul>
 </body>
 </html>

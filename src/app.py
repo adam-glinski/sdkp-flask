@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from database import db
 
 from model.user import init_default_users, User, UserRole
+from model.group import init_default_groups
 from model.task import init_default_tasks, Task
 from model.solution import init_default_solutions
 
@@ -19,6 +20,7 @@ def populate_default_db() -> None:
     Warning:
         This function is only meant for testing during development, and shouldn't be used in production.
     """
+    init_default_groups()
     init_default_users()
     init_default_tasks()
     init_default_solutions()

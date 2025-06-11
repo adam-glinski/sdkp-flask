@@ -44,6 +44,12 @@ information from users level:
 - [ ] group's he's assigned to 
     - [ ] tasks he's assigned to
 - [ ] owned tasks
+#### Task manager
+information displayed:
+- his tasks
+    - with an option to edit current task (stdin stdout)
+- uploaded solutions
+- 
 ### Task
 fields:
 - `id` (*PK*)

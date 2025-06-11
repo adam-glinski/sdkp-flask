@@ -167,6 +167,8 @@ def dashboard():
     match current_user.role:
         case UserRole.USER:
             return render_template("dashboard_user.html", user=current_user)
+        case UserRole.TASK_MANAGER:
+            return render_template("dashboard_task_manager.html", user=current_user)
         case _:
             return render_template("dashboard.html", user=current_user)
 

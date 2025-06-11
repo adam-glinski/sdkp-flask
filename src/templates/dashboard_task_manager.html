@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SDKP - Dashboard</title>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+<h1> Task manager dashboard </h1>
+<h1>Welcome back, {{ user.student_id }}</h1>
+<h2> Your tasks: </h2>
+<ul>
+    {% for task in user.owned_tasks %}
+        <li> <a href="/task/{{ task.id }}"> {{ task.name }}</a> </li>
+    {% endfor %}
+</ul>
+</body>
+</html>

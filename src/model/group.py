@@ -4,7 +4,7 @@ from model.associations import user_group, task_group
 
 class Group(db.Model):
     __tablename__ = "group"
-    id = db.Column(db.String, primary_key=True, unique=True, nullable=False)
+    id = db.Column(db.String, primary_key=True)
     users = db.relationship("User", back_populates="assigned_groups", secondary=user_group)
     tasks = db.relationship("Task", back_populates="groups", secondary=task_group)
 

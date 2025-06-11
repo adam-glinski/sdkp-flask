@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ task.name }}</title>
-</head>
-<body>
+    </head>
+    <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                {% for category, message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            </script>
+        {% endif %}
+    {% endwith %}
+
     <h1> {{ task.name }} </h1>
+    <h2> {{ task.date }} </h2>
     <p> {{ task.content }} </p>
-    <form>
-        <textarea id="solution" placeholder="Your solution"> </textarea>
-        <input type="submit"> Submit solution </input>
+    <form action="/task/{{ task.id }}" method="post">
+        <textarea name="solution" placeholder="Your solution"></textarea>
+        <input type="submit" value="Submit solution">
     </form>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, redirect, url_for, Response
+from flask import Flask, request, render_template, redirect, url_for, Response, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from database import db
@@ -7,7 +7,7 @@ from database import db
 from model.user import init_default_users, User, UserRole
 from model.group import init_default_groups
 from model.task import init_default_tasks, Task
-from model.solution import init_default_solutions
+from model.solution import init_default_solutions, Solution
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -16,7 +16,6 @@ def populate_default_db() -> None:
     """
     Populates example users, tasks and solutions.
     This function calls :func:`~model.user.init_default_users`, :func:`~model.task.init_default_tasks`, :func:`~model.solution.init_default_solutions` in that order.
-    
     Warning:
         This function is only meant for testing during development, and shouldn't be used in production.
     """
@@ -46,8 +45,8 @@ def create_app(is_debug: bool) -> tuple[Flask, LoginManager]:
 
     with app.app_context():
         db.create_all()
-
         if is_debug:
+            print("[DEBUG] Populating default db entries")
             populate_default_db()
 
     login_manager.init_app(app)
@@ -55,7 +54,8 @@ def create_app(is_debug: bool) -> tuple[Flask, LoginManager]:
     return app, login_manager
 
 
-app, login_manager = create_app(True)
+app, login_manager = create_app(False)
+# app, login_manager = create_app(True)
 
 
 @login_manager.user_loader
@@ -171,11 +171,24 @@ def dashboard():
             return render_template("dashboard.html", user=current_user)
 
 
-@app.route("/task/<int:id>")
+@app.route("/task/<int:id>", methods=["GET", "POST"])
 @login_required
-def task(id: int):
+def task(id: int):  # TODO: Add validation whether the user actually has this task assigned if not do not let him view it
+    if request.method == "POST":
+        student_id = current_user.student_id
+        code = request.form.get("solution")
+        print(f"Recived solution from {student_id} {code=}")
+
+        new_solution = Solution(task_id=id, owner_id=student_id, script=code)
+
+        db.session.add(new_solution)
+        db.session.commit()
+        flash("Successfully uploaded solution.", 'success')
+        return redirect(url_for("task", id=id))
+
     task = Task.query.get(id)
     return render_template("task.html", task=task)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

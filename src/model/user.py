@@ -13,8 +13,6 @@ class UserRole(enum.Enum):
     USER = "user"
 
 
-
-
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     student_id = db.Column(db.String, primary_key=True, unique=True, nullable=False)

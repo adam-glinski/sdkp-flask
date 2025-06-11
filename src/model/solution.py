@@ -1,10 +1,11 @@
+from datetime import datetime
 from database import db
 
 
 class Solution(db.Model):
     __tablename__ = "solution"
     id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
-    date = db.Column(db.Date)
+    date = db.Column(db.DateTime, default=datetime.now())
     # Target task
     task_id = db.Column(db.Integer, db.ForeignKey("task.id"), nullable=False)
     task = db.relationship("Task", back_populates="solutions", uselist=False)

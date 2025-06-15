@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from database import db
 
 from model.user import init_default_users, User, UserRole
-from model.group import init_default_groups
+from model.group import init_default_groups, Group
 from model.task import init_default_tasks, Task
 from model.solution import init_default_solutions, Solution
 
@@ -54,8 +54,8 @@ def create_app(is_debug: bool) -> tuple[Flask, LoginManager]:
     return app, login_manager
 
 
-app, login_manager = create_app(False)
-# app, login_manager = create_app(True)
+# app, login_manager = create_app(False)
+app, login_manager = create_app(True)
 
 
 @login_manager.user_loader
@@ -190,6 +190,33 @@ def task(id: int):  # TODO: Add validation whether the user actually has this ta
 
     task = Task.query.get(id)
     return render_template("task.html", task=task)
+
+@app.route("/task/new", methods=["GET", "POST"])
+@login_required
+def task_new():
+    if current_user.role != UserRole.TASK_MANAGER:
+        return redirect(url_for("dashboard"))
+    if request.method == "POST":
+        name = request.form.get("name")
+        content = request.form.get("content")
+        stdin = request.form.get("stdin")
+        stdout = request.form.get("stdout")
+        groups = request.form.getlist("groups")
+        new_task = Task(name=name, content=content, stdin=stdin, stdout=stdout)
+        print(groups)
+        print(f"Added {new_task=}")
+
+    all_groups = Group.query.all()
+    return render_template("task_new.html", user=current_user, all_groups=all_groups)
+
+@app.route("/task/<int:id>/solutions", methods=["GET", "POST"])
+@login_required
+def task_solutions(id: int):
+    task = Task.query.get(id)
+    if current_user.role != UserRole.TASK_MANAGER or task.manager_id != current_user.student_id:
+        return redirect(url_for("dashboard"))
+
+    return render_template("task_solutions.html", task=task)
 
 
 if __name__ == '__main__':

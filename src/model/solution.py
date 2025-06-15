@@ -1,6 +1,8 @@
 from datetime import datetime
 from database import db
 
+from backend.tester import test_code
+
 
 class Solution(db.Model):
     __tablename__ = "solution"
@@ -17,6 +19,9 @@ class Solution(db.Model):
 
     def __repr__(self) -> str:
         return f"Solution(id={self.id!r}, task={self.task!r}, owner={self.owner!r}, script={self.script!r})"
+
+    def did_pass(self) -> bool:
+        return test_code(self.script, self.task.stdin, self.task.stdout)
 
 
 def init_default_solutions():

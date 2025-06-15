@@ -20,6 +20,8 @@ class Task(db.Model):
     # Solutions
     solutions = db.relationship("Solution", back_populates="task")
     groups = db.relationship("Group", back_populates="tasks", secondary=task_group)
+    stdin = db.Column(db.String, nullable=True)
+    stdout = db.Column(db.String, nullable=True)
 
     @property
     def date_local(self) -> str:
@@ -44,7 +46,7 @@ def init_default_tasks():
 
     task2_local = datetime(2025, 7, 22, 23, 59, 00, tzinfo=local_tz)
     task2 = Task(name="Example task that is active", manager_id="s00002", content="This is an example task that is still active.", deadline=task2_local.replace(tzinfo=timezone.utc))
-    group1 = Group.query.get("c32")
+    group1 = Group.query.get("c1")
     group1.tasks.append(task1)
     group1.tasks.append(task2)
 

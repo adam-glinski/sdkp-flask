@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SDKP - Create new task</title>
+    </head>
+    <body>
+    <form action="/task/new" method="post">
+        <textarea name="name" placeholder="Task name"></textarea>
+        <textarea name="content" placeholder="Task body (content)"></textarea>
+        <textarea name="stdin" placeholder="Stdin that will be passed as a test"></textarea>
+        <textarea name="stdout" placeholder="Expected stdout"></textarea>
+        <select name="assiged_group" multiple>
+            {% for group in all_groups %}
+            <option value="{{group.id}}"> {{group.id}} </option>
+            {% endfor %}
+        </select>
+
+
+        <input type="submit" value="Add">
+    </form>
+</body>
+</html>

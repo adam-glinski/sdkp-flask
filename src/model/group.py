@@ -10,9 +10,11 @@ class Group(db.Model):
 
 
 def init_default_groups():
-    group1 = Group(id="c32")
+    group1 = Group(id="c1")
+    group2 = Group(id="c2")
+    group3 = Group(id="c3")
     try:
-        db.session.add_all([group1])
+        db.session.add_all([group1, group2, group3])
         db.session.commit()
     except Exception:
         db.session.rollback()

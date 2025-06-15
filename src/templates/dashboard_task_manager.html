@@ -12,10 +12,19 @@
 </nav>
 <h1> Task manager dashboard </h1>
 <h1>Welcome back, {{ user.student_id }}</h1>
+<input id="newTask" type="button" value="Create new task">
+<script>
+    document.getElementById("newTask").onclick = function() {
+        location.href = "/task/new"
+    }
+</script>
 <h2> Your tasks: </h2>
 <ul>
     {% for task in user.owned_tasks %}
-        <li> <a href="/task/{{ task.id }}"> {{ task.name }}</a> </li>
+        <li> 
+            <a href="/task/{{ task.id }}"> {{ task.name }}</a> 
+            <input type="button" value="Test all solutions and download pdf.">
+        </li>
     {% endfor %}
 </ul>
 </body>

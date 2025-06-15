@@ -39,7 +39,7 @@ def init_default_users():
     user = User(student_id="s00003", password="user", role=UserRole.USER)
 
     adam = User(student_id="s30593", password="test", role=UserRole.USER)
-    group1 = Group.query.get("c32")
+    group1 = Group.query.get("c1")
     adam.assigned_groups.append(group1)
 
     try:

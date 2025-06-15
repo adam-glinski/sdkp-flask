@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Solutions - {{ task.name }}</title>
+    </head>
+    <body>
+        <p> All uploaded solutions: </p>
+        <ul>
+            {% for solution in task.solutions %}
+            <li> {{ solution.owner_id }} - {{ solution.date }} </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

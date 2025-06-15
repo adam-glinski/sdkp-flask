@@ -1,4 +1,12 @@
+import io
 import os
+import tzlocal
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from flask import Flask, request, render_template, redirect, url_for, Response, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
@@ -8,6 +16,8 @@ from model.user import init_default_users, User, UserRole
 from model.group import init_default_groups, Group
 from model.task import init_default_tasks, Task
 from model.solution import init_default_solutions, Solution
+
+from backend.tester import test_code
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -181,7 +191,7 @@ def task(id: int):  # TODO: Add validation whether the user actually has this ta
         code = request.form.get("solution")
         print(f"Recived solution from {student_id} {code=}")
 
-        new_solution = Solution(task_id=id, owner_id=student_id, script=code)
+        new_solution = Solution(task_id=id, owner_id=student_id, script=code, date=datetime.now(ZoneInfo("UTC")))
 
         db.session.add(new_solution)
         db.session.commit()
@@ -190,6 +200,7 @@ def task(id: int):  # TODO: Add validation whether the user actually has this ta
 
     task = Task.query.get(id)
     return render_template("task.html", task=task)
+
 
 @app.route("/task/new", methods=["GET", "POST"])
 @login_required
@@ -201,13 +212,26 @@ def task_new():
         content = request.form.get("content")
         stdin = request.form.get("stdin")
         stdout = request.form.get("stdout")
-        groups = request.form.getlist("groups")
-        new_task = Task(name=name, content=content, stdin=stdin, stdout=stdout)
-        print(groups)
+        groups = request.form.getlist("assigned_groups")
+        deadline = request.form.get("deadline")
+
+        local_aware = datetime.strptime(deadline, "%Y-%m-%d %H:%M").replace(
+                tzinfo=ZoneInfo(tzlocal.get_localzone_name()))
+
+        new_task = Task(manager_id=current_user.student_id, name=name, content=content,
+                        stdin=stdin, stdout=stdout, deadline=local_aware.astimezone(ZoneInfo("UTC")))
+        # Assign new task to selected groups
+        # NOTE: Ideally we should keep a state of these tasks (eg unpublished, published, overdue etc)
+        for group_name in groups:
+            group = Group.query.get(group_name)
+            group.tasks.append(new_task)
+        db.session.add(new_task)
+        db.session.commit()
         print(f"Added {new_task=}")
 
     all_groups = Group.query.all()
     return render_template("task_new.html", user=current_user, all_groups=all_groups)
+
 
 @app.route("/task/<int:id>/solutions", methods=["GET", "POST"])
 @login_required
@@ -216,8 +240,23 @@ def task_solutions(id: int):
     if current_user.role != UserRole.TASK_MANAGER or task.manager_id != current_user.student_id:
         return redirect(url_for("dashboard"))
 
+    student_passed = {}
+
+    if request.method == "POST":
+        for solution in task.solutions:
+            student_passed[solution.owner_id] = None
+            if student_passed[solution.owner_id] != None:
+                continue
+            student_passed[solution.owner_id] = test_code(solution.script, task.stdin, task.stdout)
+
+    for student_id, tested in student_passed.items():
+        print(f"{student_id} - {tested}")
+        # buffer = io.BytesIO()
+        # c = canvas.Canvas(buffer, pagesize=A4)
+        # c.setFont("Helvetica", 13)
+    
     return render_template("task_solutions.html", task=task)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

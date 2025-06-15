@@ -25,10 +25,10 @@ class Task(db.Model):
 
     @property
     def date_local(self) -> str:
+        self.deadline = self.deadline.replace(tzinfo=ZoneInfo("UTC"))
         local_tz = ZoneInfo(tzlocal.get_localzone_name())
-        d: datetime = self.deadline
-        d.replace(tzinfo=local_tz)
-        return f"{d.year}/{d.month}/{d.day} {d.hour}:{d.minute}"
+        d: datetime = self.deadline.astimezone(tz=local_tz)
+        return d.strftime("%Y-%m-%d %H:%M")
 
     @property
     def is_active(self) -> bool:  # Compare as UTC
@@ -42,10 +42,15 @@ class Task(db.Model):
 def init_default_tasks():
     local_tz = ZoneInfo(tzlocal.get_localzone_name())
     task1_local = datetime(2025, 6, 10, 18, 59, 00, tzinfo=local_tz)
-    task1 = Task(name="Example task that is past deadline", manager_id="s00002", content="This is an example task that is past deadline.", deadline=task1_local.replace(tzinfo=timezone.utc))
+    task1 = Task(name="Example task that is past deadline", manager_id="s00002", 
+                 content="This is an example task that is past deadline.", deadline=task1_local.astimezone(timezone.utc))
 
     task2_local = datetime(2025, 7, 22, 23, 59, 00, tzinfo=local_tz)
-    task2 = Task(name="Example task that is active", manager_id="s00002", content="This is an example task that is still active.", deadline=task2_local.replace(tzinfo=timezone.utc))
+    task2 = Task(name="Printing text", manager_id="s00002", 
+                 content="Write a script that will output \"Hello, World!\" to the console. ",
+                 deadline=task2_local.astimezone(timezone.utc),
+                 stdout="Hello, World!")
+
     group1 = Group.query.get("c1")
     group1.tasks.append(task1)
     group1.tasks.append(task2)

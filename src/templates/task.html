@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ task.name }}</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ task.name }}</title>
     </head>
     <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <script>
-                {% for category, message in messages %}
-                    alert("{{ message }}");
-                {% endfor %}
-            </script>
+        <script>
+            {% for category, message in messages %}
+            alert("{{ message }}");
+            {% endfor %}
+        </script>
         {% endif %}
-    {% endwith %}
+        {% endwith %}
 
-    <h1> {{ task.name }} </h1>
-    <h2> {{ task.date }} </h2>
-    <p> {{ task.content }} </p>
-    <form action="/task/{{ task.id }}" method="post">
-        <textarea name="solution" placeholder="Your solution"></textarea>
-        <input type="submit" value="Submit solution">
-    </form>
-</body>
+        <h1> {{ task.name }} </h1>
+        <h2> {{ task.date_local }} </h2>
+        <p> {{ task.content }} </p>
+        <input type="file" id="file_input" accept="*.py">
+        <form action="/task/{{ task.id }}" method="post">
+            <textarea id="solution" name="solution" placeholder="Your solution"></textarea>
+            <input type="submit" value="Submit solution">
+        </form>
+
+        <script>
+            const file_input = document.getElementById("file_input");
+            const solution_area = document.getElementById("solution")
+
+            file_input.addEventListener("change", function() {
+                const file = file_input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    solution_area.value = e.target.result;
+                };
+
+                reader.onerror = function(e){
+                    alert("Error reading file: " + e.target.error.name)
+                };
+
+                reader.readAsText(file);
+            })
+        </script>
+    </body>
 </html>

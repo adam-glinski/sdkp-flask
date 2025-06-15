@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>SDKP - Create new task</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
     <form action="/task/new" method="post">
@@ -10,7 +12,19 @@
         <textarea name="content" placeholder="Task body (content)"></textarea>
         <textarea name="stdin" placeholder="Stdin that will be passed as a test"></textarea>
         <textarea name="stdout" placeholder="Expected stdout"></textarea>
-        <select name="assiged_group" multiple>
+        <label for="deadline">Deadline:</label>
+        <!-- <input name="deadline" type="datetime-local" id="deadline"> -->
+        <input name="deadline" type="text" id="deadline">
+        <script>
+            flatpickr("#deadline", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                minDate: "today",
+                defaultDate: new Date(),
+            })
+        </script>
+        <select name="assigned_groups" multiple>
             {% for group in all_groups %}
             <option value="{{group.id}}"> {{group.id}} </option>
             {% endfor %}

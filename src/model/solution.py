@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from database import db
 
 from backend.tester import test_code
@@ -6,7 +8,7 @@ from backend.tester import test_code
 class Solution(db.Model):
     __tablename__ = "solution"
     id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
-    date = db.Column(db.DateTime)
+    date = db.Column(db.DateTime, nullable=False)
     # Target task
     task_id = db.Column(db.Integer, db.ForeignKey("task.id"), nullable=False)
     task = db.relationship("Task", back_populates="solutions", uselist=False)
@@ -24,8 +26,8 @@ class Solution(db.Model):
 
 
 def init_default_solutions():
-    soltion_user = Solution(task_id=1, owner_id="s00003", script="User's solution to task 1.")
-    soltion_adam = Solution(task_id=1, owner_id="s00004", script="Adam's solution to task 1.")
+    soltion_user = Solution(task_id=2, owner_id="s00003", script="print(\"Hello, World!\")", date=datetime.now(tz=timezone.utc))
+    soltion_adam = Solution(task_id=2, owner_id="s00004", script="print(\"Should fail\")", date=datetime.now(tz=timezone.utc))
     try:
         db.session.add_all([soltion_user, soltion_adam])
         db.session.commit()

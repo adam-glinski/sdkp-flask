@@ -12,6 +12,8 @@ fi
 
 if [[ \ $*\  == *\ --backend\ * ]] || [[ \ $*\  == *\ -b\ * ]]; then
     ./.venv/bin/python src/backend/tester.py
+elif [[ \ $*\  == *\ --pdf\ * ]] || [[ \ $*\  == *\ -p\ * ]]; then
+    ./.venv/bin/python  src/backend/pdf_generation.py
 else
     flask --app "src/app.py" run 
 fi

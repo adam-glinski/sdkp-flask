@@ -1,13 +1,10 @@
-import io
 import os
 import tzlocal
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
 
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from flask import Flask, request, render_template, redirect, url_for, Response, flash
+from flask import Flask, request, render_template, redirect, url_for, Response, flash, make_response
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from database import db
@@ -18,6 +15,7 @@ from model.task import init_default_tasks, Task
 from model.solution import init_default_solutions, Solution
 
 from backend.tester import test_code
+from backend.pdf_generation import gen_pdf
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -242,20 +240,21 @@ def task_solutions(id: int):
 
     student_passed = {}
 
+    uploaded_solutions: list[Solution] = task.solutions
     if request.method == "POST":
-        for solution in task.solutions:
+        uploaded_solutions.sort(key=lambda s: s.date)
+        for solution in uploaded_solutions:
             student_passed[solution.owner_id] = None
-            if student_passed[solution.owner_id] != None:
+            if student_passed[solution.owner_id] is not None:
                 continue
             student_passed[solution.owner_id] = test_code(solution.script, task.stdin, task.stdout)
 
-    for student_id, tested in student_passed.items():
-        print(f"{student_id} - {tested}")
-        # buffer = io.BytesIO()
-        # c = canvas.Canvas(buffer, pagesize=A4)
-        # c.setFont("Helvetica", 13)
-    
-    return render_template("task_solutions.html", task=task)
+    pdf = gen_pdf(f"Results for \"{task.name}\"", student_passed)
+    pdf.seek(0)  # reset cursor
+    response = make_response(pdf.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename={task.name}_results.pdf'
+    return response
 
 
 if __name__ == '__main__':

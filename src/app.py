@@ -99,15 +99,13 @@ def register() -> Response:
     """
     if request.method == "POST":
         student_id = request.form.get("student_id")
-        name = request.form.get("name")
-        surname = request.form.get("surname")
         role = request.form.get("role")
         password = request.form.get("password")  # Should store only hashed passwords but its poc
 
         if User.query.filter_by(student_id=student_id).first():
             return render_template("sign_up.html", error="Account with that student id already exists")
 
-        if not student_id or not name or not surname or not password or not role:
+        if not student_id or not password or not role:
             return render_template("sign_up.html", error="Please fill all fields")
 
         # if role not in ["admin", "task manager", "user"]:
@@ -122,7 +120,7 @@ def register() -> Response:
 
         # hashed_password = generate_password_hash(password, method="pbkdf2:sha256") # DELETEME
 
-        new_user = User(student_id=student_id, name=name, surname=surname, password=password, role=role)
+        new_user = User(student_id=student_id, password=password, role=role)
         db.session.add(new_user)
         db.session.commit()
 
@@ -197,6 +195,8 @@ def task(id: int):  # TODO: Add validation whether the user actually has this ta
         return redirect(url_for("task", id=id))
 
     task = Task.query.get(id)
+    if not task.is_active and task.manager_id != current_user.student_id:
+        return redirect("/dashboard")
     return render_template("task.html", task=task)
 
 

@@ -15,3 +15,5 @@ Submodules
    model.solution
    model.task
    model.user
+   model.group
+   model.associations

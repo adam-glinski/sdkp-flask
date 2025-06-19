@@ -62,8 +62,8 @@ def create_app(is_debug: bool) -> tuple[Flask, LoginManager]:
     return app, login_manager
 
 
-# app, login_manager = create_app(False)
-app, login_manager = create_app(True)
+app, login_manager = create_app(False)
+# app, login_manager = create_app(True)
 
 
 @login_manager.user_loader
@@ -204,6 +204,13 @@ def dashboard():
 @app.route("/task/<int:id>", methods=["GET", "POST"])
 @login_required
 def task(id: int):  # TODO: Add validation whether the user actually has this task assigned if not do not let him view it
+    """
+    Function exposes the '/task/<int>' route, which displays the current task for GET request
+    and saves user solution for POST request
+
+    Args:
+        id (int): Id of the task
+    """
     if request.method == "POST":
         student_id = current_user.student_id
         code = request.form.get("solution")
@@ -225,6 +232,10 @@ def task(id: int):  # TODO: Add validation whether the user actually has this ta
 @app.route("/task/new", methods=["GET", "POST"])
 @login_required
 def task_new():
+    """
+    Function exposes the '/task/new' route, which displays form to create new task for GET request
+    and saves thew newly created task for POST request
+    """
     if current_user.role != UserRole.TASK_MANAGER:
         return redirect(url_for("dashboard"))
     if request.method == "POST":
@@ -253,9 +264,15 @@ def task_new():
     return render_template("task_new.html", user=current_user, all_groups=all_groups)
 
 
-@app.route("/task/<int:id>/solutions", methods=["GET", "POST"])
+@app.route("/task/<int:id>/solutions", methods=["POST"])
 @login_required
 def task_solutions(id: int):
+    """
+    Function exposes the '/task/<int>/solutions' route, which displays the tested solutions in a form of pdf for POST request
+
+    Args:
+        id (int): Id of the task
+    """
     task = Task.query.get(id)
     if current_user.role != UserRole.TASK_MANAGER or task.manager_id != current_user.student_id:
         return redirect(url_for("dashboard"))

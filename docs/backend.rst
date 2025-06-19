@@ -13,3 +13,4 @@ Submodules
    :maxdepth: 4
 
    backend.tester
+   backend.pdf_generation

@@ -34,7 +34,11 @@ def test_code(script: str, input: str, expected_output: str) -> bool:
             text=True
     )
 
+    err = output.stderr.strip()
     output = output.stdout.strip()
+    if err != "":  # Assume script should never throw errors
+        print(f"[DEBUG]{script=} returned err: {err}")
+        return False
     expected_output = expected_output
 
     if output == expected_output:
@@ -63,6 +67,11 @@ def is_palindrome(t):
 
 print(is_palindrome(input()))
     """
+
+    error_code = """
+this code shouldnt work
+    """
     assert test_code(fib_code, input="", expected_output="34")
     assert test_code(palindrome_code, input="zakaz", expected_output="True")
     assert not test_code(palindrome_code, input="Hello, World!", expected_output="True")
+    assert not test_code(error_code, input="3", expected_output="3")

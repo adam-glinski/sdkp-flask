@@ -38,6 +38,13 @@ def _create_table(c: canvas.Canvas, headings: list[list[str]], data: dict):
 
 
 def gen_pdf(title: str, data: dict) -> io.BytesIO:
+    """
+    Function generates the pdf report
+
+    Args:
+        title (str): The title fo the task
+        data (dict): The data for the generated table (student_id:passed)
+    """
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
     _create_title(c, title)

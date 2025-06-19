@@ -49,7 +49,11 @@ information displayed:
 - his tasks
     - with an option to edit current task (stdin stdout)
 - uploaded solutions
-- 
+#### Admin
+- existing groups
+    - allow him to create new groups
+- existing users
+    - let him assign users to new groups
 ### Task
 fields:
 - `id` (*PK*)

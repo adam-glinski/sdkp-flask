@@ -163,7 +163,7 @@ def logout() -> Response:
     return redirect(url_for("index"))
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["POST", "GET"])
 @login_required
 def dashboard():
     """
@@ -175,6 +175,28 @@ def dashboard():
             return render_template("dashboard_user.html", user=current_user)
         case UserRole.TASK_MANAGER:
             return render_template("dashboard_task_manager.html", user=current_user)
+        case UserRole.ADMIN:
+            if request.method == "POST":
+                new_group_id: str = request.form.get("new_group_id")
+                action = request.form.get("action")
+                if action == "Create new group":
+                    if Group.query.get(new_group_id) is None:
+                        new_group = Group(id=new_group_id)
+                        db.session.add(new_group)
+                        db.session.commit()
+                elif action == "Add selected users to selected groups":
+                    selected_users: list[User] = request.form.getlist("users")
+                    selected_groups: list[Group] = request.form.getlist("groups")
+                    for group_id in selected_groups:
+                        for user_id in selected_users:
+                            user = User.query.get(user_id)
+                            # if not any(g == group_id for g in user.assigned_groups):  # If user not already assigned
+                            if user.assigned_groups.count(group_id) == 0:
+                                group = Group.query.get(group_id)
+                                group.users.append(user)
+                    db.session.commit()
+                return redirect("/dashboard")
+            return render_template("dashboard_admin.html", user=current_user, all_groups=Group.query.all(), all_users=User.query.filter_by(role=UserRole.USER))
         case _:
             return render_template("dashboard.html", user=current_user)
 
